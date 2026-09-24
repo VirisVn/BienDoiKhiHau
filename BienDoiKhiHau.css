@@ -1,0 +1,154 @@
+/* =========================================================
+   1. NỀN ĐỘNG & VIỀN PHÁT SÁNG CHO SLIDE
+   ========================================================= */
+
+/* Tạo hiệu ứng viền LED phát sáng quanh khung slide */
+.slide-container {
+  box-shadow:
+    0 0 30px rgba(220, 38, 38, 0.3),
+    0 0 60px rgba(16, 185, 129, 0.2);
+  transition: all 0.5s ease;
+}
+
+/* Thẻ chứa hiệu ứng lớp phủ mờ đè lên ảnh nền */
+.slide-overlay {
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.2) 0%,
+    rgba(0, 0, 0, 0.75) 65%,
+    rgba(0, 0, 0, 0.95) 100%
+  );
+}
+
+/* =========================================================
+   2. TẠO HẠT BỤI / KHÓI BAY LƠ LỬNG (AMBIENT PARTICLES)
+   ========================================================= */
+
+.particles-bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 10;
+  overflow: hidden;
+}
+
+.particle {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+  animation: floatUp 12s infinite linear;
+}
+
+/* Tạo nhiều hạt với kích thước và vị trí ngẫu nhiên */
+.particle:nth-child(1) {
+  width: 6px;
+  height: 6px;
+  left: 10%;
+  animation-duration: 14s;
+  animation-delay: 0s;
+}
+.particle:nth-child(2) {
+  width: 8px;
+  height: 8px;
+  left: 25%;
+  animation-duration: 18s;
+  animation-delay: 2s;
+  background: rgba(239, 68, 68, 0.2);
+}
+.particle:nth-child(3) {
+  width: 4px;
+  height: 4px;
+  left: 45%;
+  animation-duration: 10s;
+  animation-delay: 4s;
+}
+.particle:nth-child(4) {
+  width: 10px;
+  height: 10px;
+  left: 65%;
+  animation-duration: 22s;
+  animation-delay: 1s;
+  background: rgba(16, 185, 129, 0.25);
+}
+.particle:nth-child(5) {
+  width: 5px;
+  height: 5px;
+  left: 85%;
+  animation-duration: 15s;
+  animation-delay: 3s;
+}
+
+@keyframes floatUp {
+  0% {
+    transform: translateY(100vh) scale(0.8) rotate(0deg);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.8;
+  }
+  80% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(-10vh) scale(1.2) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+/* =========================================================
+   3. HIỆU ỨNG CHỮ & THẺ NỘI DUNG (GLASSMORPHISM)
+   ========================================================= */
+
+/* Khung chứa văn bản mờ kiểu thuỷ tinh */
+.glass-card {
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 1rem;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+/* Hiệu ứng chữ tiêu đề phát sáng theo nhịp thở */
+.glow-title-red {
+  animation: glowRed 3s infinite ease-in-out alternate;
+}
+
+@keyframes glowRed {
+  0% {
+    text-shadow:
+      0 0 10px rgba(239, 68, 68, 0.5),
+      0 0 20px rgba(239, 68, 68, 0.3);
+  }
+  100% {
+    text-shadow:
+      0 0 20px rgba(239, 68, 68, 0.9),
+      0 0 40px rgba(220, 38, 38, 0.7);
+  }
+}
+
+/* Hiệu ứng chữ tiêu đề màu xanh lá phát sáng */
+.glow-title-green {
+  animation: glowGreen 3s infinite ease-in-out alternate;
+}
+
+@keyframes glowGreen {
+  0% {
+    text-shadow:
+      0 0 10px rgba(16, 185, 129, 0.5),
+      0 0 20px rgba(16, 185, 129, 0.3);
+  }
+  100% {
+    text-shadow:
+      0 0 20px rgba(16, 185, 129, 0.9),
+      0 0 40px rgba(5, 150, 105, 0.7);
+  }
+}
+
+/* Thanh Progress Bar có vệt sáng chạy qua */
+.progress-bar-glow {
+  box-shadow:
+    0 0 12px #ef4444,
+    0 0 24px #dc2626;
+}
