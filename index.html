@@ -1,0 +1,601 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bài Thuyết Trình: Biến Đổi Khí Hậu</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,400;0,700;0,900;1,400&family=Montserrat:wght@600;800;900&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      .aspect-16-9 {
+        aspect-ratio: 16 / 9;
+      }
+      .font-news {
+        font-family: "Merriweather", Georgia, serif;
+      }
+      .font-title {
+        font-family: "Montserrat", sans-serif;
+      }
+
+      .slide {
+        opacity: 0;
+        transition: opacity 1s ease-in-out;
+        pointer-events: none;
+      }
+      .slide.active {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      .slide-img {
+        opacity: 0;
+        transition: opacity 1.5s ease-in-out;
+      }
+      .slide-img.show {
+        opacity: 1;
+      }
+
+      .zoom-effect {
+        animation: zoomSlow 25s infinite alternate linear;
+      }
+      @keyframes zoomSlow {
+        from {
+          transform: scale(1);
+        }
+        to {
+          transform: scale(1.12);
+        }
+      }
+
+      .slide-container {
+        box-shadow:
+          0 0 30px rgba(220, 38, 38, 0.3),
+          0 0 60px rgba(16, 185, 129, 0.2);
+        transition: all 0.5s ease;
+      }
+
+      .slide-overlay {
+        background: linear-gradient(
+          180deg,
+          rgba(0, 0, 0, 0.2) 0%,
+          rgba(0, 0, 0, 0.75) 65%,
+          rgba(0, 0, 0, 0.95) 100%
+        );
+      }
+
+      .particles-bg {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        z-index: 10;
+        overflow: hidden;
+      }
+      .particle {
+        position: absolute;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.15);
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        animation: floatUp 12s infinite linear;
+      }
+      .particle:nth-child(1) {
+        width: 6px;
+        height: 6px;
+        left: 10%;
+        animation-duration: 14s;
+      }
+      .particle:nth-child(2) {
+        width: 8px;
+        height: 8px;
+        left: 25%;
+        animation-duration: 18s;
+        animation-delay: 2s;
+        background: rgba(239, 68, 68, 0.2);
+      }
+      .particle:nth-child(3) {
+        width: 4px;
+        height: 4px;
+        left: 45%;
+        animation-duration: 10s;
+        animation-delay: 4s;
+      }
+      .particle:nth-child(4) {
+        width: 10px;
+        height: 10px;
+        left: 65%;
+        animation-duration: 22s;
+        animation-delay: 1s;
+        background: rgba(16, 185, 129, 0.25);
+      }
+      .particle:nth-child(5) {
+        width: 5px;
+        height: 5px;
+        left: 85%;
+        animation-duration: 15s;
+        animation-delay: 3s;
+      }
+      @keyframes floatUp {
+        0% {
+          transform: translateY(100vh) scale(0.8) rotate(0deg);
+          opacity: 0;
+        }
+        20% {
+          opacity: 0.8;
+        }
+        80% {
+          opacity: 0.8;
+        }
+        100% {
+          transform: translateY(-10vh) scale(1.2) rotate(360deg);
+          opacity: 0;
+        }
+      }
+
+      .glass-card {
+        background: rgba(0, 0, 0, 0.45);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 1rem;
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+      }
+
+      .glow-title-red {
+        animation: glowRed 3s infinite ease-in-out alternate;
+      }
+      @keyframes glowRed {
+        0% {
+          text-shadow:
+            0 0 10px rgba(239, 68, 68, 0.5),
+            0 0 20px rgba(239, 68, 68, 0.3);
+        }
+        100% {
+          text-shadow:
+            0 0 20px rgba(239, 68, 68, 0.9),
+            0 0 40px rgba(220, 38, 38, 0.7);
+        }
+      }
+
+      .glow-title-green {
+        animation: glowGreen 3s infinite ease-in-out alternate;
+      }
+      @keyframes glowGreen {
+        0% {
+          text-shadow:
+            0 0 10px rgba(16, 185, 129, 0.5),
+            0 0 20px rgba(16, 185, 129, 0.3);
+        }
+        100% {
+          text-shadow:
+            0 0 20px rgba(16, 185, 129, 0.9),
+            0 0 40px rgba(5, 150, 105, 0.7);
+        }
+      }
+
+      .progress-bar-glow {
+        box-shadow:
+          0 0 12px #ef4444,
+          0 0 24px #dc2626;
+      }
+      .custom-scroll::-webkit-scrollbar {
+        width: 6px;
+      }
+      .custom-scroll::-webkit-scrollbar-thumb {
+        background-color: rgba(255, 255, 255, 0.3);
+        border-radius: 3px;
+      }
+    </style>
+  </head>
+  <body
+    class="bg-black min-h-screen flex flex-col items-center justify-center p-2 sm:p-4 select-none overflow-hidden font-sans"
+  >
+    <!-- Audio phát giọng thuyết minh voice1.mp3 -> voice8.mp3 & Nhạc nền -->
+    <audio id="voice-player" preload="auto"></audio>
+    <audio id="bgm" src="type/bgm1.mp3" preload="auto" loop></audio>
+
+    <div
+      class="slide-container w-full max-w-5xl aspect-16-9 relative overflow-hidden rounded-2xl shadow-2xl bg-gray-950 border border-gray-800"
+    >
+      <div class="particles-bg">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+      </div>
+
+      <!-- START OVERLAY -->
+      <div
+        id="start-overlay"
+        onclick="startPresentation()"
+        class="absolute inset-0 z-50 bg-black/90 backdrop-blur-md flex flex-col items-center justify-center text-white cursor-pointer transition-opacity duration-500"
+      >
+        <div
+          class="bg-red-600 hover:bg-red-500 text-white font-black text-xl sm:text-2xl px-8 py-4 rounded-xl shadow-2xl flex items-center space-x-3 border-2 border-red-400 animate-bounce"
+        >
+          <svg
+            class="w-8 h-8"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"
+            ></path>
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+            ></path>
+          </svg>
+          <span>BẮT ĐẦU TRÌNH CHIẾU</span>
+        </div>
+        <p class="text-sm text-gray-400 mt-4">
+          Bài thuyết trình của Hà Đức Trí - Lớp 9A1
+        </p>
+      </div>
+
+      <!-- SLIDE 1: GIỚI THIỆU & LỜI CHÀO -->
+      <div
+        id="slide-1"
+        class="slide absolute inset-0 bg-gradient-to-br from-gray-900 via-black to-red-950 flex flex-col items-center justify-center text-center p-8"
+      >
+        <span
+          class="text-red-500 font-bold uppercase tracking-widest text-sm sm:text-base mb-2"
+          >BÀI THUYẾT TRÌNH VỀ MÔI TRƯỜNG</span
+        >
+        <h1
+          class="font-title text-3xl sm:text-5xl font-black text-white glow-title-red mb-4"
+        >
+          THẢM HỌA BIẾN ĐỔI KHÍ HẬU
+        </h1>
+        <p
+          class="font-news text-gray-300 text-base sm:text-xl max-w-2xl italic leading-relaxed glass-card p-6"
+        >
+          "Xin gửi lời chào đến cô giáo, các bạn học sinh thân mến một lời chào
+          trân trọng nhất."
+        </p>
+      </div>
+
+      <!-- SLIDE 2: NÊU VẤN ĐỀ DẪN BÀI -->
+      <div
+        id="slide-2"
+        class="slide absolute inset-0 bg-gradient-to-br from-black via-red-950 to-gray-900 flex flex-col items-center justify-center text-center p-8"
+      >
+        <span
+          class="text-amber-400 font-bold uppercase tracking-widest text-sm sm:text-base mb-2"
+          >THỰC TRẠNG CẤP BÁCH</span
+        >
+        <h2 class="font-title text-2xl sm:text-4xl font-black text-white mb-4">
+          KHỦNG HOẢNG SINH TỒN
+        </h2>
+        <p
+          class="font-news text-gray-200 text-sm sm:text-lg max-w-3xl leading-relaxed glass-card p-6 border-l-4 border-red-500"
+        >
+          "Chúng ta đang sống trong một thời đại mà thiên tai, bão lũ và sự bất
+          thường của thời tiết không còn là chuyện xa lạ. Biến đổi khí hậu không
+          còn là lời cảnh báo cho tương lai, mà đã trở thành cuộc khủng hoảng
+          sinh tồn của hiện tại."
+        </p>
+      </div>
+
+      <!-- SLIDE 3: Khái niệm -->
+      <div id="slide-3" class="slide absolute inset-0">
+        <img
+          id="s3-img1"
+          src="type/img1.jpg"
+          class="slide-img show w-full h-full object-cover zoom-effect absolute inset-0"
+        />
+        <img
+          id="s3-img2"
+          src="type/img2.jpg"
+          class="slide-img w-full h-full object-cover zoom-effect absolute inset-0"
+        />
+        <div
+          class="absolute inset-0 slide-overlay p-6 sm:p-10 flex flex-col justify-end"
+        >
+          <div class="glass-card p-4 sm:p-6 max-w-3xl">
+            <span
+              class="text-red-400 font-bold uppercase tracking-widest text-xs sm:text-sm"
+              >Phần 1: Khái Niệm</span
+            >
+            <h2
+              class="font-title text-2xl sm:text-3xl font-black text-white mt-1"
+            >
+              Biến Đổi Khí Hậu Là Gì?
+            </h2>
+            <p
+              class="font-news text-gray-200 text-xs sm:text-base leading-relaxed mt-2"
+            >
+              Biến đổi khí hậu là sự thay đổi môi trường sống trên quy mô lớn,
+              thay đổi thời tiết ở cấp độ vĩ mô. Đó là sự biến đổi hệ thống khí
+              hậu Trái Đất trong khoảng thời gian dài, gây nóng lên toàn cầu và
+              làm biến đổi sinh thái nghiêm trọng.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 4: Nguyên nhân -->
+      <div id="slide-4" class="slide absolute inset-0">
+        <img
+          id="s4-img1"
+          src="type/img3.jpg"
+          class="slide-img show w-full h-full object-cover zoom-effect absolute inset-0"
+        />
+        <img
+          id="s4-img2"
+          src="type/img4.jpg"
+          class="slide-img w-full h-full object-cover zoom-effect absolute inset-0"
+        />
+        <div
+          class="absolute inset-0 slide-overlay p-6 sm:p-10 flex flex-col justify-end"
+        >
+          <div class="glass-card p-4 sm:p-6 max-w-3xl">
+            <span
+              class="text-amber-400 font-bold uppercase tracking-widest text-xs sm:text-sm"
+              >Phần 2: Nguyên Nhân</span
+            >
+            <h2
+              class="font-title text-2xl sm:text-3xl font-black text-white mt-1"
+            >
+              Khí Thải & Chiếc Chăn Nhà Kính
+            </h2>
+            <p
+              class="font-news text-gray-200 text-xs sm:text-base leading-relaxed mt-2"
+            >
+              Do khí thải công nghiệp, đốt rác thải, cháy rừng và núi lửa phun
+              trào. Khí nhà kính hoạt động như một chiếc chăn bao phủ, giữ lại
+              toàn bộ nhiệt lượng khiến Trái Đất không thể giải phóng nhiệt ra
+              ngoài vũ trụ.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 5: Hậu quả -->
+      <div id="slide-5" class="slide absolute inset-0">
+        <img
+          id="s5-img1"
+          src="type/img5.jpg"
+          class="slide-img show w-full h-full object-cover zoom-effect absolute inset-0"
+        />
+        <img
+          id="s5-img2"
+          src="type/img6.jpg"
+          class="slide-img w-full h-full object-cover zoom-effect absolute inset-0"
+        />
+        <div
+          class="absolute inset-0 slide-overlay p-6 sm:p-10 flex flex-col justify-end"
+        >
+          <div class="glass-card p-4 sm:p-6 max-w-3xl">
+            <span
+              class="text-red-400 font-bold uppercase tracking-widest text-xs sm:text-sm"
+              >Phần 3: Hậu Quả Cực Đoan</span
+            >
+            <h2
+              class="font-title text-2xl sm:text-3xl font-black text-white mt-1"
+            >
+              Bão Lũ & Hạn Hán Tàn Phá
+            </h2>
+            <p
+              class="font-news text-gray-200 text-xs sm:text-base leading-relaxed mt-2"
+            >
+              Tạo ra những cơn bão lớn liên tục tàn phá tài sản, gây hạn hán nứt
+              nẻ đất đai và lũ lụt mưa lớn làm ảnh hưởng nghiêm trọng tới ngành
+              nông nghiệp, công nghiệp và lưu thông hàng hóa.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 6: Giải pháp vĩ mô -->
+      <div id="slide-6" class="slide absolute inset-0">
+        <img
+          id="s6-img1"
+          src="type/img7.jpg"
+          class="slide-img show w-full h-full object-cover zoom-effect absolute inset-0"
+        />
+        <img
+          id="s6-img2"
+          src="type/img8.jpg"
+          class="slide-img w-full h-full object-cover zoom-effect absolute inset-0"
+        />
+        <div
+          class="absolute inset-0 slide-overlay p-6 sm:p-10 flex flex-col justify-end"
+        >
+          <div class="glass-card p-4 sm:p-6 max-w-3xl">
+            <span
+              class="text-blue-400 font-bold uppercase tracking-widest text-xs sm:text-sm"
+              >Phần 4: Giải Pháp Vĩ Mô</span
+            >
+            <h2
+              class="font-title text-2xl sm:text-3xl font-black text-white mt-1"
+            >
+              Giải Pháp Quốc Tế & Tự Nhiên
+            </h2>
+            <p
+              class="font-news text-gray-200 text-xs sm:text-base leading-relaxed mt-2"
+            >
+              Các nhà hoạt động môi trường kêu gọi chuyển đổi năng lượng xanh,
+              bảo vệ rừng, ngăn chặn biển xâm lấn bờ biển và thực thi các cam
+              kết pháp lý quốc tế để hạn chế phát thải carbon.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 7: Ý thức cá nhân -->
+      <div id="slide-7" class="slide absolute inset-0">
+        <img
+          id="s7-img1"
+          src="type/img9.jpg"
+          class="slide-img show w-full h-full object-cover zoom-effect absolute inset-0"
+        />
+        <img
+          id="s7-img2"
+          src="type/img10.jpg"
+          class="slide-img w-full h-full object-cover zoom-effect absolute inset-0"
+        />
+        <div
+          class="absolute inset-0 slide-overlay p-6 sm:p-10 flex flex-col justify-end"
+        >
+          <div class="glass-card p-4 sm:p-6 max-w-3xl">
+            <span
+              class="text-green-400 font-bold uppercase tracking-widest text-xs sm:text-sm"
+              >Phần 5: Giải Pháp Cá Nhân</span
+            >
+            <h2
+              class="font-title text-2xl sm:text-3xl font-black text-white mt-1"
+            >
+              Ý Thức & Sự Chủ Động
+            </h2>
+            <p
+              class="font-news text-gray-200 text-xs sm:text-base leading-relaxed mt-2"
+            >
+              Mỗi cá nhân cần nhặt rác bảo vệ nguồn nước, sử dụng sản phẩm bền
+              vững và tiết kiệm điện năng. Tiết kiệm 1 số điện giúp giảm 0.8kg
+              CO2. Quan trọng nhất vẫn là ý thức và sự chủ động của mỗi người.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 8: LỜI CẢM ƠN -->
+      <div
+        id="slide-8"
+        class="slide absolute inset-0 bg-gradient-to-br from-gray-900 via-black to-emerald-950 flex flex-col items-center justify-center text-center p-8"
+      >
+        <span
+          class="text-emerald-400 font-bold uppercase tracking-widest text-sm sm:text-base mb-2"
+          >KẾT THÚC BÀI THUYẾT TRÌNH</span
+        >
+        <h2
+          class="font-title text-3xl sm:text-5xl font-black text-white glow-title-green mb-4"
+        >
+          XIN CHÂN THÀNH CẢM ƠN!
+        </h2>
+        <p
+          class="font-news text-gray-300 text-base sm:text-xl max-w-2xl italic leading-relaxed glass-card p-6"
+        >
+          "Bài thuyết trình ở trên chính là ý kiến và suy nghĩ của em về biến
+          đổi khí hậu. Cảm ơn cô và các bạn đã lắng nghe bài thuyết trình của em
+          - Em xin được kết thúc bài thuyết trình tại đây."
+        </p>
+      </div>
+
+      <div class="absolute bottom-0 left-0 right-0 h-2 bg-gray-900 z-40">
+        <div
+          id="progress-bar"
+          class="h-full bg-red-600 w-0 progress-bar-glow transition-all duration-300"
+        ></div>
+      </div>
+    </div>
+
+    <script>
+      const slides = [
+        document.getElementById("slide-1"),
+        document.getElementById("slide-2"),
+        document.getElementById("slide-3"),
+        document.getElementById("slide-4"),
+        document.getElementById("slide-5"),
+        document.getElementById("slide-6"),
+        document.getElementById("slide-7"),
+        document.getElementById("slide-8"),
+      ];
+
+      // Đã cập nhật đúng đường dẫn voice1.mp3 -> voice8.mp3 trong thư mục type/
+      const audioFiles = [
+        "type/voice1.mp3",
+        "type/voice2.mp3",
+        "type/voice3.mp3",
+        "type/voice4.mp3",
+        "type/voice5.mp3",
+        "type/voice6.mp3",
+        "type/voice7.mp3",
+        "type/voice8.mp3",
+      ];
+
+      const voicePlayer = document.getElementById("voice-player");
+      const bgm = document.getElementById("bgm");
+      bgm.volume = 0.35;
+
+      let currentIndex = 0;
+      let imageToggleInterval = null;
+      const progressBar = document.getElementById("progress-bar");
+
+      function handleBGM(index) {
+        if (index === 0) {
+          bgm.pause();
+        } else {
+          if (bgm.paused) {
+            bgm.play().catch(() => {});
+          }
+        }
+      }
+
+      function startImageToggle(slideNum) {
+        if (imageToggleInterval) clearInterval(imageToggleInterval);
+        const img1 = document.getElementById(`s${slideNum}-img1`);
+        const img2 = document.getElementById(`s${slideNum}-img2`);
+
+        if (img1 && img2) {
+          img1.classList.add("show");
+          img2.classList.remove("show");
+          imageToggleInterval = setInterval(() => {
+            img1.classList.toggle("show");
+            img2.classList.toggle("show");
+          }, 7000);
+        }
+      }
+
+      function playSlide(index) {
+        if (index >= slides.length) {
+          progressBar.style.width = "100%";
+          return;
+        }
+
+        currentIndex = index;
+
+        slides.forEach((s, idx) => {
+          if (idx === index) s.classList.add("active");
+          else s.classList.remove("active");
+        });
+
+        progressBar.style.width = `${((index + 1) / slides.length) * 100}%`;
+
+        handleBGM(index);
+        startImageToggle(index + 1);
+
+        // Nạp và phát file voice tương ứng
+        voicePlayer.src = audioFiles[index];
+        voicePlayer.play().catch((e) => console.log("Lỗi phát audio:", e));
+
+        // Tự động chuyển Slide ngay khi file giọng đọc tương ứng kết thúc
+        voicePlayer.onended = function () {
+          setTimeout(() => {
+            playSlide(index + 1);
+          }, 600);
+        };
+      }
+
+      function startPresentation() {
+        document.getElementById("start-overlay").style.opacity = "0";
+        setTimeout(
+          () =>
+            (document.getElementById("start-overlay").style.display = "none"),
+          500,
+        );
+
+        playSlide(0);
+      }
+    </script>
+  </body>
+</html>
